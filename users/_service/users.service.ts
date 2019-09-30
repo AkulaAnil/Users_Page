@@ -1,4 +1,4 @@
-import { Floor, IClients, ICreateDepartments, ICreateUsers, IDepartements, IDoctorList, IGetUser, IGroups, IHospitals, IMDepartment, IMapNurse, IResActiveUser, IRoles, IUser, IUserResponse } from '../_model/IUsers';
+import { Floor, IClients, ICreateDepartments, ICreateUsers, IDepartements, IDoctorList, IGetUser, IGroups, IHospitals, IMDepartment, IMapNurse, IResActiveUser, IRoles, IUser, IUserResponse, ISPLevel, ISPDoctor, IRole, ISPProfile, ISPCreate } from '../_model/IUsers';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { ConsumerService } from '../../_helpers/ConsumerService';
@@ -40,18 +40,18 @@ export class UsersService {
             return Observable.throw({ error: { messages: "url not found" } });
         }
     }
-    // getFloorsWithDeptsAndDoctorsByFacilitateId():Observable<IDLevelList[]>{
-    //     let _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "getFloorsWithDeptsAndDoctorsByFacilitateId")
-    //     console.log("URL Get from config : =====>  ", _apiurlsdetials);
-    //     if (_apiurlsdetials) {
-    //         console.log("URL Get from config : ---->  ", _apiurlsdetials.url);
-    //         return this.consumer.serviceConsumer<IDLevelList[]>(_apiurlsdetials.url, _apiurlsdetials.type, null, 'floors');
-    //     }
-    //     else {
-    //         console.log("URL Get from config : ---->  ", "Url not found..");
-    //         return Observable.throw({ error: { messages: "url not found" } });
-    //     }
-    // }
+    getFloorsWithDeptsAndDoctorsByFacilitateId():Observable<ISPLevel[]>{
+        let _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "getFloorsWithDeptsAndDoctorsByFacilitateId")
+        console.log("URL Get from config : =====>  ", _apiurlsdetials);
+        if (_apiurlsdetials) {
+            console.log("URL Get from config : ---->  ", _apiurlsdetials.url);
+            return this.consumer.serviceConsumer<ISPLevel[]>(_apiurlsdetials.url, _apiurlsdetials.type, null, 'floors');
+        }
+        else {
+            console.log("URL Get from config : ---->  ", "Url not found..");
+            return Observable.throw({ error: { messages: "url not found" } });
+        }
+    }
     getHospitalsInfo(): Observable<IHospitals[]> {
         let _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "getFacilitiesByClientId")
         console.log("URL Get from config : =====>  ", _apiurlsdetials);
@@ -269,21 +269,21 @@ deleteUserByid(deleteid: any) {
 getlevelsDeptSeviceInfo(): Observable<Floor[]> {
     const _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "getFloorsWithDeptsByFacilitateId");
     if (_apiurlsdetials) {
-        console.log("DevicesService: getlevelsDeptSeviceInfo: ---->  ", _apiurlsdetials);
+        console.log("UsersService: getlevelsDeptSeviceInfo: ---->  ", _apiurlsdetials);
         return this.consumer.serviceConsumer<Floor[]>(_apiurlsdetials.url, _apiurlsdetials.type, null, 'floors');
     } else {
-        console.log("DevicesService: getlevelsDeptSeviceInfo: ---->  ", "Url not found..");
+        console.log("UsersService: getlevelsDeptSeviceInfo: ---->  ", "Url not found..");
         return Observable.throw({ error: { message: "url not found" } });
     }
 }
 getDeptSeviceInfo(userId): Observable<IMDepartment[]> {
     const _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "getDeptAndServicesByUserId");
     if (_apiurlsdetials) {
-        console.log("DevicesService: getlevelsDeptSeviceInfo: ---->  ", _apiurlsdetials);
+        console.log("UsersService: getlevelsDeptSeviceInfo: ---->  ", _apiurlsdetials);
         let _apiUrl = _apiurlsdetials.url.replace("{userid}", userId);
         return this.consumer.serviceConsumer<IMDepartment[]>(_apiUrl, _apiurlsdetials.type, null, 'departments');
     } else {
-        console.log("DevicesService: getlevelsDeptSeviceInfo: ---->  ", "Url not found..");
+        console.log("UsersService: getlevelsDeptSeviceInfo: ---->  ", "Url not found..");
         return Observable.throw({ error: { message: "url not found" } });
     }
 }
@@ -324,5 +324,29 @@ isRoleEditable(loginid): Observable<IUserResponse> {
       console.log("URL Get from config : ---->  ", "Url not found..");
       return Observable.throw({ error: { messages: "url not found" } });
   }
+}
+createSecondaryProfile(addDetails: ISPCreate): Observable<IUserResponse> {
+    let _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "createSecondProfile");
+    console.log("URL Get from config : =====> ", _apiurlsdetials);
+    if (_apiurlsdetials) {
+        console.log("URL Get from config : ----> ", _apiurlsdetials.url);
+        return this.consumer.serviceConsumer<IUserResponse>(_apiurlsdetials.url, _apiurlsdetials.type, addDetails);
+    }
+    else {
+        console.log("URL Get from config : ----> ", "Url not found..");
+        return Observable.throw({ error: { messages: "url not found" } });
+    }
+}
+
+getProfileByNurse(userId:number): Observable<ISPProfile[]> {
+    const _apiurlsdetials = this.apiUrls.getApiServiceUrlByComponentAndMethod(this.component, "getProfileByNurse");
+    if (_apiurlsdetials) {
+        console.log("UsersService: getProfileByNurse: ---->  ", _apiurlsdetials);
+        let _apiUrl = _apiurlsdetials.url.replace("{nurseId}", userId+'');
+        return this.consumer.serviceConsumer<ISPProfile[]>(_apiUrl, _apiurlsdetials.type, null, 'nurseProfiles');
+    } else {
+        console.log("UsersService: getProfileByNurse: ---->  ", "Url not found..");
+        return Observable.throw({ error: { message: "url not found" } });
+    }
 }
 }
