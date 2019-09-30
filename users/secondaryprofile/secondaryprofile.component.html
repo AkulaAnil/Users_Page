@@ -1,0 +1,73 @@
+<mat-card>
+  <mat-card-header>
+    <div fxLayout="row wrap" class="w80">
+      <h4 class="wrap-word">{{'usersModule.secondaryTitle' | translate}}</h4>
+    </div>
+    <button mat-icon-button [mat-dialog-close] style="position: absolute; right: 1%; "><i
+      class="ti-close"></i></button>
+  </mat-card-header>
+  <mat-card-content class="pad-all2">
+    <div fxLayout="row wrap" class="mar-btm">
+
+      <div fxFlex.gt-sm="100" class="example-container" >
+        <div>
+  <form [formGroup]="usersForm">
+    <mat-form-field class="full-width" cdkFocusInitial>
+      <mat-select multiple (selectionChange)="levelSelection($event.value,true)" placeholder="{{ 'usersModule.createSecondaryProfile.levelSelection' | translate}}" formControlName="level" [required]="isRequiredField('level')">
+          <mat-select-trigger>
+              {{floorName}} : {{buildName}}
+              <span *ngIf="(usersForm?.value.level)?.length>
+              1" class="example-additional-selection">
+              (+{{(usersForm?.value.level)?.length - 1}} others)
+              </span>
+          </mat-select-trigger>
+      <mat-option   class="pre-content" *ngFor="let level of totalLevels" [value]="level">
+        {{level.floorName}} : {{level.buildName}}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="usersForm.controls.level.errors?.required">{{ 'ActionNames.errorSelectMessage' | translate
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field style="width: 100%" >
+      <mat-select multiple (selectionChange)="selectDepartMent($event.value,true)" placeholder="{{ 'usersModule.createSecondaryProfile.departmentSelection' | translate}}"
+        formControlName="department" [required]="isRequiredField('department')">       
+        <mat-select-trigger>
+            {{deptName}}
+          <span *ngIf="(usersForm?.value.department)?.length>
+          1" class="example-additional-selection">
+          (+{{(usersForm?.value.department)?.length - 1}} others)
+          </span>
+            </mat-select-trigger>
+          <mat-optgroup *ngFor="let floor of filterFloorGroup" [label]="floor.floorName">
+  
+            <mat-option   class="pre-content"  [value]="dept" *ngFor="let dept of floor.departments">{{dept.deptName}}</mat-option>
+          </mat-optgroup>
+      </mat-select>
+      <mat-error *ngIf="usersForm.controls.department.errors?.required">{{ 'ActionNames.errorSelectMessage' | translate}}</mat-error>
+    </mat-form-field>
+    <mat-form-field style="width: 100%">
+      <mat-select multiple   (selectionChange)="selectedDoctor($event.value)" placeholder="{{ 'usersModule.createSecondaryProfile.assignDoctors' | translate}}" formControlName="doctor" [required]="isRequiredField('doctor')">
+          <mat-select-trigger>
+              {{doctorName}}
+              <span *ngIf="(usersForm?.value.doctor)?.length>
+              1" class="example-additional-selection">
+              (+{{(usersForm?.value.doctor)?.length - 1}} others)
+              </span>
+          </mat-select-trigger>
+        <mat-optgroup *ngFor="let department of filterDeptGroup" label="{{department?.floorName}} - {{department?.deptName}}"> 
+        <mat-option    class="pre-content" *ngFor="let doctor of department.doctors" [value]="doctor">
+          {{doctor.firstname}} {{doctor.lastname}}</mat-option>
+        </mat-optgroup>
+      </mat-select>
+      <mat-error *ngIf="usersForm.controls.doctor.errors?.required">{{ 'ActionNames.errorSelectMessage' | translate}}</mat-error>
+    </mat-form-field>
+    <div class="clearfix">
+      <button mat-raised-button color="primary" (click)="createSecondaryProfile()" [disabled]="usersForm.invalid && _editProfile.length==0">{{ 'ActionNames.submit' | translate}}</button>
+    </div>
+  </form></div></div></div></mat-card-content>
+</mat-card>
+
+<div class="fullloader2" *ngIf="loading">
+  <div class="fullloaderInner">
+    <img src="assets/images/loading.gif">
+  </div>
+</div>
